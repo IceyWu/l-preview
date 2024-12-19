@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+// import LPImage from "@/components/Image/LPImage.vue";
 import type { ImageProps } from "@/types/components";
 import "@/styles/components/image.css";
 
@@ -219,6 +220,20 @@ onUnmounted(() => {
         </div>
 
         <!-- 预览图 -->
+        <!-- <LPImage
+          ref="imageRef"
+          :data="data"
+          :alt="alt"
+          class="preview-image"
+          isShowBase
+          :style="{
+            transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) rotate(${rotation}deg)`,
+            opacity: loading ? 0 : 1,
+            cursor: isDragging ? 'grabbing' : 'grab',
+          }"
+          @load="handleImageLoad"
+          @mousedown.prevent="handleDragStart"
+        /> -->
         <img
           ref="imageRef"
           :src="src"

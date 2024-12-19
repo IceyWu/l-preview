@@ -21,4 +21,5 @@ export interface InputProps extends BaseProps {
 export interface ImageProps {
   src: string
   alt?: string
+  data?: any
 }
