@@ -1,0 +1,9 @@
+@import './components/button.css';
+@import './components/input.css';
+
+:root {
+  --primary-color: #646cff;
+  --secondary-color: #42b883;
+  --border-color: #ddd;
+  --disabled-bg: #f5f5f5;
+}

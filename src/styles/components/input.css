@@ -1,0 +1,19 @@
+.m-input {
+  padding: 0.6em 1em;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.m-input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.m-input--disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
