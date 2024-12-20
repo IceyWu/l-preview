@@ -1,7 +1,7 @@
 {
   "name": "l-preview",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist"
@@ -23,7 +23,8 @@
     "preview": "vite preview",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "release": "changelogen --release && npm publish --registry https://registry.npmjs.org"
   },
   "dependencies": {
     "@iceywu/utils": "^0.0.49",
@@ -35,10 +36,12 @@
     "@types/node": "^22.10.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "bumpp": "^9.9.1",
+    "changelogen": "^0.5.7",
     "typescript": "^5.7.2",
-    "vite": "^6.0.4",
-    "vue-tsc": "^2.1.10",
-    "vitepress": "^1.5.0"
+    "vite": "^5.4.2",
+    "vitepress": "^1.5.0",
+    "vue-tsc": "^2.1.10"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
