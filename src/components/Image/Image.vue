@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import LPImage from "@/components/Image/LPImage.tsx";
 // import LPImage from "@/components/Image/LPImage.vue";
 import type { ImageProps } from "@/types/components";
 import "@/styles/components/image.css";
@@ -52,6 +53,7 @@ const zoom = (delta: number) => {
     // 计算新的缩放尺寸
     const scaledWidth = imageRef.value.naturalWidth * newScale;
     const scaledHeight = imageRef.value.naturalHeight * newScale;
+
 
     // 计算新的最大移动范围
     const maxX = Math.max(0, (scaledWidth - containerWidth) / 2);
@@ -116,9 +118,12 @@ const handleKeydown = (e: KeyboardEvent) => {
       break;
   }
 };
-
+const naturalWidth = ref(0);
+const naturalHeight = ref(0);
 // 图片加载完成
-const handleImageLoad = () => {
+const handleImageLoad = (e:{ naturalWidth: number; naturalHeight: number }) => {
+  naturalWidth.value = e.naturalWidth;
+  naturalHeight.value = e.naturalHeight;
   loading.value = false;
 };
 
@@ -139,9 +144,10 @@ const handleWheel = (e: WheelEvent) => {
 const handleDragStart = (e: MouseEvent) => {
   isDragging.value = true;
   startPosition.value = {
-    x: e.clientX - position.value.x,
-    y: e.clientY - position.value.y,
+    x: (e.clientX - position.value.x) || 0,
+    y: (e.clientY - position.value.y) || 0,
   };
+
 };
 
 // 拖动中
@@ -153,10 +159,8 @@ const handleDrag = (e: MouseEvent) => {
   const containerHeight = window.innerHeight * 0.9; // 90vh
 
   // 获取图片原始尺寸
-  const img = imageRef.value;
-  const imgWidth = img.naturalWidth;
-  const imgHeight = img.naturalHeight;
-
+  const imgWidth = naturalWidth.value;
+  const imgHeight = naturalHeight.value;
   // 计算图片在当前缩放下的实际尺寸
   const scaledWidth = imgWidth * scale.value;
   const scaledHeight = imgHeight * scale.value;
@@ -169,6 +173,7 @@ const handleDrag = (e: MouseEvent) => {
 
   // 计算新位置
   const newX = e.clientX - startPosition.value.x;
+  
   const newY = e.clientY - startPosition.value.y;
 
   // 限制移动范围
@@ -203,9 +208,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="image-preview-container">
+  <div class="image-preview-container" style="height: 100%; width: 100%;">
     <!-- 缩略图 -->
-    <img :src="src" :alt="alt" class="thumbnail" @click="showPreview" />
+    <!-- <img :src="src" :alt="alt" class="thumbnail" @click="showPreview" /> -->
+    <LPImage  :data="data" style="height: 100%; width: 100%;"  isShowOrigin @click="showPreview"  />
 
     <!-- 使用 Teleport 包装预览遮罩层 -->
     <Teleport to="body">
@@ -218,23 +224,25 @@ onUnmounted(() => {
         <div v-if="loading" class="loading">
           <div class="spinner"></div>
         </div>
-
         <!-- 预览图 -->
-        <!-- <LPImage
+        <LPImage
           ref="imageRef"
           :data="data"
           :alt="alt"
           class="preview-image"
-          isShowBase
-          :style="{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) rotate(${rotation}deg)`,
-            opacity: loading ? 0 : 1,
-            cursor: isDragging ? 'grabbing' : 'grab',
+          isShowOrigin
+          v-bind="{
+            scale: scale,
+            rotation: rotation,
+            position: position,
+            isDragging: isDragging,
           }"
-          @load="handleImageLoad"
+
+         
+          @imageLoaded="handleImageLoad"
           @mousedown.prevent="handleDragStart"
-        /> -->
-        <img
+        />
+        <!-- <img
           ref="imageRef"
           :src="src"
           :alt="alt"
@@ -246,7 +254,7 @@ onUnmounted(() => {
           }"
           @load="handleImageLoad"
           @mousedown.prevent="handleDragStart"
-        />
+        /> -->
 
         <!-- 图片元信息面板 -->
         <div class="metadata-panel">
