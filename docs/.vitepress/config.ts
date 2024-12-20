@@ -12,8 +12,8 @@ export default defineConfig({
       {
         text: '组件',
         items: [
-          { text: 'Button 按钮', link: '/components/button' },
-          { text: 'Input 输入框', link: '/components/input' }
+          // { text: 'Button 按钮', link: '/components/button' },
+          { text: 'Image 图片预览', link: '/components/image' }
         ]
       }
     ]
