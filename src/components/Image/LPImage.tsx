@@ -1,4 +1,11 @@
-import { defineComponent, computed, onMounted, ref, nextTick } from "vue";
+import {
+  defineComponent,
+  computed,
+  onMounted,
+  ref,
+  nextTick,
+  watch,
+} from "vue";
 import { isEmpty } from "@iceywu/utils";
 import * as LivePhotosKit from "livephotoskit";
 
@@ -27,8 +34,8 @@ export default defineComponent({
     // 加载延时
     delay: {
       type: Number,
+      default: 0,
       // default: 1_000,
-      default: 1_000,
     },
     // loading模式（blurhash,normal）
     mode: {
@@ -66,7 +73,7 @@ export default defineComponent({
       default: false,
     },
   },
-  setup(props, { slots, attrs,emit }) {
+  setup(props, { slots, attrs, emit }) {
     // 是否展示原图
     const isShowOrigin = computed(() => {
       return props.isShowOrigin && isLoaded.value;
@@ -81,9 +88,8 @@ export default defineComponent({
         return "";
       }
     });
-    const blurhashSrc = ref<string | any>();
     const isLoaded = ref<boolean>(false);
-    // 模拟模糊度
+    const blurhashSrc = ref<string | any>();
     const blurNumber = ref(30);
     const IntervalObj = ref<any>(null);
     function decreaseBlurNumber() {
@@ -110,15 +116,19 @@ export default defineComponent({
       imgPre.addEventListener("error", () => {});
       imgPre.src = props.data?.thumbnail;
     }
-    onMounted(() => {
+
+    // 图片加载逻辑
+    const loadImage = () => {
       const img = document.createElement("img");
       img.onload = () => {
         setTimeout(() => {
           isLoaded.value = true;
           blurNumber.value = 0;
           clearInterval(IntervalObj.value);
-
-          emit("imageLoaded", { naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight });
+          emit("imageLoaded", {
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+          });
           if (props.isLive) {
             initLivePhoto();
           }
@@ -130,13 +140,28 @@ export default defineComponent({
         }, props.delay);
       };
       img.src = props.data?.file;
+
       // 初始化loading模式
-      if (props.mode === "blurhash") {
+      if (props.mode === "blurhash" && !isEmpty(props.data?.blurhash)) {
         const pixels = decode(props.data?.blurhash, 32, 32);
         blurhashSrc.value = getDataUrlFromArr(pixels, 32, 32);
       } else if (props.mode === "normal") {
         initPreImg();
       }
+    };
+
+    // 监听 data 属性变化
+    watch(
+      () => props.data,
+      () => {
+        isLoaded.value = false; // 重置加载状态
+        loadImage(); // 重新加载图片
+      },
+      { immediate: true }
+    );
+
+    onMounted(() => {
+      loadImage(); // 初始加载图片
     });
 
     const placeholderStyle = computed(() => {

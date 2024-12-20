@@ -19,7 +19,7 @@ export interface InputProps extends BaseProps {
   type?: InputType
 }
 export interface ImageProps {
-  src: string
+  src?: string
   alt?: string
-  data?: any
+  images: any[]; // 新增属性：图片列标数组
 }

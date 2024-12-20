@@ -6,9 +6,7 @@ import type { ImageProps } from "@/types/components";
 import "@/styles/components/image.css";
 import ImageMetaPanel from "./ImageMetaPanel.vue";
 
-const props = withDefaults(defineProps<ImageProps>(), {
-  src: "",
-});
+const { images = [] } = defineProps<ImageProps>();
 
 const isVisible = ref(false);
 const scale = ref(1);
@@ -18,6 +16,8 @@ const position = ref({ x: 0, y: 0 });
 const isDragging = ref(false);
 const startPosition = ref({ x: 0, y: 0 });
 const imageRef = ref<HTMLImageElement | null>(null);
+const currentIndex = ref(0);
+// const images = ref<string[]>([]);
 
 // 图片缩放
 const zoom = (delta: number) => {
@@ -167,6 +167,27 @@ const handleDragEnd = () => {
   isDragging.value = false;
 };
 
+// 切换到下一张图片，增加循环功能
+const nextImage = () => {
+  currentIndex.value = (currentIndex.value + 1) % images.length; // 循环到第一张
+  resetImageState()
+};
+
+// 切换到上一张图片，增加循环功能
+const prevImage = () => {
+  currentIndex.value = (currentIndex.value - 1 + images.length) % images.length; // 
+  resetImageState()
+};
+// 重置缩放和位置状态
+const resetImageState = () => {
+  scale.value = 1; // 重置缩放
+  position.value = { x: 0, y: 0 }; // 重置位置
+  rotation.value = 0; // 重置旋转
+  isDragging.value = false; // 重置拖动状态
+  startPosition.value = { x: 0, y: 0 }; // 重置拖动起始位置
+  isDragging.value = false; // 重置拖动状态
+};
+
 // 注册和清理键盘事件监听
 onMounted(() => {
   window.addEventListener("keydown", handleKeydown);
@@ -184,7 +205,7 @@ onUnmounted(() => {
 <template>
   <div class="image-preview-container" style="height: 100%; width: 100%">
     <LPImage
-      :data="data"
+      :data="images[currentIndex]"
       style="height: 100%; width: 100%"
       isShowOrigin
       @click="showPreview"
@@ -204,7 +225,7 @@ onUnmounted(() => {
         <!-- 预览图 -->
         <LPImage
           ref="imageRef"
-          :data="data"
+          :data="images[currentIndex]"
           :alt="alt"
           class="preview-image"
           isShowOrigin
@@ -220,11 +241,13 @@ onUnmounted(() => {
 
         <!-- 图片元信息面板 -->
         <slot name="meta">
-          <ImageMetaPanel :data="data" />
+          <ImageMetaPanel :data="images[currentIndex]" />
         </slot>
 
         <!-- 控制按钮 -->
         <div class="controls">
+          <button @click="prevImage" title="上一张">←</button>
+          <button @click="nextImage" title="下一张">→</button>
           <button @click="zoom(0.1)" title="放大">+</button>
           <button @click="zoom(-0.1)" title="缩小">-</button>
           <button @click="rotate" title="旋转">↻</button>
