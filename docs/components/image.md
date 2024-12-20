@@ -11,7 +11,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import Image from '@/components/Image/Image.vue'
+import { Image } from 'l-preview' 
+import 'l-preview/dist/style.css'
 
 const imgInfo = ref({
   "file": "https://nest-js.oss-accelerate.aliyuncs.com/nestTest/1/1711965193523.JPEG",
