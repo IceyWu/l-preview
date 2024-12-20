@@ -4,8 +4,9 @@ import LPImage from "@/components/Image/LPImage.tsx";
 // import LPImage from "@/components/Image/LPImage.vue";
 import type { ImageProps } from "@/types/components";
 import "@/styles/components/image.css";
+import ImageMetaPanel from "./ImageMetaPanel.vue";
 
-withDefaults(defineProps<ImageProps>(), {
+const props = withDefaults(defineProps<ImageProps>(), {
   src: "",
 });
 
@@ -17,29 +18,6 @@ const position = ref({ x: 0, y: 0 });
 const isDragging = ref(false);
 const startPosition = ref({ x: 0, y: 0 });
 const imageRef = ref<HTMLImageElement | null>(null);
-const showMoreInfo = ref(false);
-
-// 添加图片元信息接口
-interface ImageMetadata {
-  camera: string;
-  lens: string;
-  iso: number;
-  aperture: string;
-  shutterSpeed: string;
-  location: string;
-  takenAt: string;
-}
-
-// 模拟图片元数据（后续可以通过 props 传入）
-const metadata = ref<ImageMetadata>({
-  camera: "Sony A7R IV",
-  lens: "FE 24-70mm F2.8 GM",
-  iso: 100,
-  aperture: "f/2.8",
-  shutterSpeed: "1/1000",
-  location: "东京, 日本",
-  takenAt: "2024-03-20 14:30",
-});
 
 // 图片缩放
 const zoom = (delta: number) => {
@@ -53,7 +31,6 @@ const zoom = (delta: number) => {
     // 计算新的缩放尺寸
     const scaledWidth = imageRef.value.naturalWidth * newScale;
     const scaledHeight = imageRef.value.naturalHeight * newScale;
-
 
     // 计算新的最大移动范围
     const maxX = Math.max(0, (scaledWidth - containerWidth) / 2);
@@ -121,7 +98,10 @@ const handleKeydown = (e: KeyboardEvent) => {
 const naturalWidth = ref(0);
 const naturalHeight = ref(0);
 // 图片加载完成
-const handleImageLoad = (e:{ naturalWidth: number; naturalHeight: number }) => {
+const handleImageLoad = (e: {
+  naturalWidth: number;
+  naturalHeight: number;
+}) => {
   naturalWidth.value = e.naturalWidth;
   naturalHeight.value = e.naturalHeight;
   loading.value = false;
@@ -144,10 +124,9 @@ const handleWheel = (e: WheelEvent) => {
 const handleDragStart = (e: MouseEvent) => {
   isDragging.value = true;
   startPosition.value = {
-    x: (e.clientX - position.value.x) || 0,
-    y: (e.clientY - position.value.y) || 0,
+    x: e.clientX - position.value.x || 0,
+    y: e.clientY - position.value.y || 0,
   };
-
 };
 
 // 拖动中
@@ -173,7 +152,7 @@ const handleDrag = (e: MouseEvent) => {
 
   // 计算新位置
   const newX = e.clientX - startPosition.value.x;
-  
+
   const newY = e.clientY - startPosition.value.y;
 
   // 限制移动范围
@@ -186,11 +165,6 @@ const handleDrag = (e: MouseEvent) => {
 // 结束拖动
 const handleDragEnd = () => {
   isDragging.value = false;
-};
-
-// 切换完整信息面板的显示
-const toggleMoreInfo = () => {
-  showMoreInfo.value = !showMoreInfo.value;
 };
 
 // 注册和清理键盘事件监听
@@ -208,10 +182,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="image-preview-container" style="height: 100%; width: 100%;">
-    <!-- 缩略图 -->
-    <!-- <img :src="src" :alt="alt" class="thumbnail" @click="showPreview" /> -->
-    <LPImage  :data="data" style="height: 100%; width: 100%;"  isShowOrigin @click="showPreview"  />
+  <div class="image-preview-container" style="height: 100%; width: 100%">
+    <LPImage
+      :data="data"
+      style="height: 100%; width: 100%"
+      isShowOrigin
+      @click="showPreview"
+    />
 
     <!-- 使用 Teleport 包装预览遮罩层 -->
     <Teleport to="body">
@@ -237,74 +214,14 @@ onUnmounted(() => {
             position: position,
             isDragging: isDragging,
           }"
-
-         
           @imageLoaded="handleImageLoad"
           @mousedown.prevent="handleDragStart"
         />
-        <!-- <img
-          ref="imageRef"
-          :src="src"
-          :alt="alt"
-          class="preview-image"
-          :style="{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${scale}) rotate(${rotation}deg)`,
-            opacity: loading ? 0 : 1,
-            cursor: isDragging ? 'grabbing' : 'grab',
-          }"
-          @load="handleImageLoad"
-          @mousedown.prevent="handleDragStart"
-        /> -->
 
         <!-- 图片元信息面板 -->
-        <div class="metadata-panel">
-          <div class="metadata-header">
-            <div class="camera-info">
-              <span class="camera-model">{{ metadata.camera }}</span>
-              <span class="lens-model">{{ metadata.lens }}</span>
-            </div>
-          </div>
-          <div class="metadata-body">
-            <div class="exposure-settings">
-              <div class="metadata-item">
-                <span class="value">{{ metadata.iso }}</span>
-                <span class="label">ISO</span>
-              </div>
-              <div class="metadata-item">
-                <span class="value">{{ metadata.aperture }}</span>
-                <span class="label">光圈</span>
-              </div>
-              <div class="metadata-item">
-                <span class="value">{{ metadata.shutterSpeed }}</span>
-                <span class="label">快门</span>
-              </div>
-            </div>
-            <div class="location-info">
-              <div class="location">
-                <i class="location-icon">📍</i>
-                <span>{{ metadata.location }}</span>
-              </div>
-              <div class="time">
-                <i class="time-icon">🕒</i>
-                <span>{{ metadata.takenAt }}</span>
-              </div>
-            </div>
-          </div>
-          <button @click="toggleMoreInfo" class="more-info-button">
-            {{ showMoreInfo.value ? "收起信息" : "查看更多信息" }}
-          </button>
-          <div v-if="showMoreInfo" class="more-info-panel">
-            <h4>更多信息</h4>
-            <p>拍摄设备: {{ metadata.camera }}</p>
-            <p>镜头型号: {{ metadata.lens }}</p>
-            <p>ISO: {{ metadata.iso }}</p>
-            <p>光圈: {{ metadata.aperture }}</p>
-            <p>快门速度: {{ metadata.shutterSpeed }}</p>
-            <p>拍摄地点: {{ metadata.location }}</p>
-            <p>拍摄时间: {{ metadata.takenAt }}</p>
-            <p>其他信息: 这里可以添加更多的拍摄信息...</p>
-          </div>
-        </div>
+        <slot name="meta">
+          <ImageMetaPanel :data="data" />
+        </slot>
 
         <!-- 控制按钮 -->
         <div class="controls">
