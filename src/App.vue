@@ -21,6 +21,15 @@ const imgInfo = {
   thumbnail:
     "https://nest-js.oss-accelerate.aliyuncs.com/nestTest/1/1711965193523.JPEG?x-oss-process=image/resize,l_500",
 };
+const imgInfoV2 = {
+  id: 96,
+  name: "IMG_0198.JPEG",
+  path: "/nestTest/1",
+  type: "image/jpeg",
+  file: "https://nest-js.oss-accelerate.aliyuncs.com/nestTest/1/1711965193523.JPEG",
+
+ 
+};
 const imgList = [
   {
     id: 920,
@@ -560,7 +569,7 @@ const imgList = [
 <template>
   <div>
     <div style="height: 400px; width: 400px">
-      <Image :images="imgList" alt="Vite logo" />
+      <Image src="http://nest-js.oss-accelerate.aliyuncs.com/nestTest/1/1733059220159.JPG"  style="object-fit: cover;" isNeedMetaPanel alt="Vite logo" />
     </div>
 
     <a href="https://vuejs.org/" target="_blank">

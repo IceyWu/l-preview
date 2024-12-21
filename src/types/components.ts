@@ -21,5 +21,6 @@ export interface InputProps extends BaseProps {
 export interface ImageProps {
   src?: string
   alt?: string
-  images: any[]; // 新增属性：图片列标数组
+  data?: any[] | any;
+  isNeedMetaPanel?: boolean;
 }

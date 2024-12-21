@@ -24,21 +24,33 @@ const imgMetaData = computed(() => {
       key: "Model",
       label: "拍摄设备",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "LensModel",
       label: "镜头型号",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "ISOSpeedRatings",
       label: "ISO",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "FocalLengthIn35mmFilm",
       label: "焦距",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "FNumber",
@@ -53,16 +65,25 @@ const imgMetaData = computed(() => {
       key: "ShutterSpeedValue",
       label: "快门",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "GPSAltitude",
       label: "海拔",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "DateTimeOriginal",
       label: "拍摄时间",
       value: "",
+      valFormat: (val: string) => {
+        return val ?? "--";
+      },
     },
     {
       key: "location",
@@ -130,10 +151,13 @@ const getMetaByKey = (key: string) => {
         </div>
       </div>
       <div class="location-info">
-        <div class="location">
-          <i class="location-icon">📍</i>
-          <span>{{ getMetaByKey("location")?.value || "--" }} </span>
-        </div>
+        <slot name="location">
+          <div class="location">
+            <i class="location-icon">📍</i>
+            <span>{{ getMetaByKey("location")?.value || "--" }} </span>
+          </div>
+        </slot>
+
         <div class="time">
           <i class="time-icon">🕒</i>
           <span>{{ getMetaByKey("DateTimeOriginal")?.value }}</span>
@@ -146,9 +170,10 @@ const getMetaByKey = (key: string) => {
     <div v-if="showMoreInfo" class="more-info-panel">
       <h4>更多信息</h4>
       <p v-for="item in imgMetaData" :key="item.key">
-        {{ item?.label }}: {{ item?.value }}
+        {{ item?.label }}: {{ item?.value || "--" }}
       </p>
-      <p>其他信息: 这里可以添加更多的拍摄信息...</p>
+      <slot name="more"></slot>
+     
     </div>
   </div>
 </template>
