@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import LPImage from "@/components/Image/LPImage.tsx";
 import type { ImageProps } from "@/types/components";
 import "@/styles/components/image.css";
 import ImageMetaPanel from "./ImageMetaPanel.vue";
 import { isArray, isEmpty } from "@iceywu/utils";
 
-const { data, src } = defineProps<ImageProps>();
+const { data, src,initialIndex=0 } = defineProps<ImageProps>();
 const images = computed(() => {
   if (isEmpty(src)) {
     return isArray(data) ? data : [data];
@@ -19,6 +19,7 @@ const images = computed(() => {
   }
 });
 
+
 const isVisible = ref(false);
 const scale = ref(1);
 const rotation = ref(0);
@@ -27,7 +28,11 @@ const position = ref({ x: 0, y: 0 });
 const isDragging = ref(false);
 const startPosition = ref({ x: 0, y: 0 });
 const imageRef = ref<HTMLImageElement | null>(null);
-const currentIndex = ref(0);
+const currentIndex = ref(initialIndex || 0);
+// 监听initialIndex
+watch(() => initialIndex, (val) => {
+  currentIndex.value = val;
+});
 
 // 图片缩放
 const zoom = (delta: number) => {
@@ -248,8 +253,15 @@ onUnmounted(() => {
 
       <!-- 图片元信息面板 -->
       <template v-if="isNeedMetaPanel && !isEmpty(images[currentIndex].exif)">
-        <slot name="meta">
-          <ImageMetaPanel :data="images[currentIndex]" />
+        <slot name="meta" >
+          <ImageMetaPanel :data="images[currentIndex]">
+            <template #location>
+              <slot :data="images[currentIndex]" name="location"> </slot>
+            </template>
+            <template #more>
+              <slot :data="images[currentIndex]"  name="more"> </slot>
+            </template>
+          </ImageMetaPanel>
         </slot>
       </template>
 

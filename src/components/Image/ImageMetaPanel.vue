@@ -151,7 +151,7 @@ const getMetaByKey = (key: string) => {
         </div>
       </div>
       <div class="location-info">
-        <slot name="location">
+        <slot name="location" :data>
           <div class="location">
             <i class="location-icon">📍</i>
             <span>{{ getMetaByKey("location")?.value || "--" }} </span>
@@ -172,7 +172,7 @@ const getMetaByKey = (key: string) => {
       <p v-for="item in imgMetaData" :key="item.key">
         {{ item?.label }}: {{ item?.value || "--" }}
       </p>
-      <slot name="more"></slot>
+      <slot name="more" :data></slot>
      
     </div>
   </div>

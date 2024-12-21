@@ -569,7 +569,7 @@ const imgList = [
 <template>
   <div>
     <div style="height: 400px; width: 400px">
-      <Image src="http://nest-js.oss-accelerate.aliyuncs.com/nestTest/1/1733059220159.JPG"  style="object-fit: cover;" isNeedMetaPanel alt="Vite logo" />
+      <Image :data="imgInfo"  style="object-fit: cover;" isNeedMetaPanel alt="Vite logo" />
     </div>
 
     <a href="https://vuejs.org/" target="_blank">
