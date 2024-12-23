@@ -58,7 +58,7 @@ const imgMetaData = computed(() => {
       value: "",
       valFormat: (val: string) => {
         const num = eval(val) || 0;
-        return `f/${num.toFixed(1)}`;
+        return `f/${num?.toFixed(1)}`;
       },
     },
     {
@@ -96,7 +96,6 @@ const imgMetaData = computed(() => {
   ];
   const tempData: { [key: string]: string } = {};
   const exifData = customDestr(props.data.exif, { customVal: {} });
-  console.log('🎁-----exifData-----', exifData);
   info_enum.forEach((item) => {
     const { valFormat } = item;
     item.value = getObjVal(exifData, item.key, { value: "" })?.value || "";
@@ -111,6 +110,7 @@ const toggleMoreInfo = () => {
 };
 
 const getMetaByKey = (key: string) => {
+  if(!imgMetaData.value) return { key: "", label: "", value: "" };
   return (
     imgMetaData.value.find((item) => item.key === key) || {
       key: "",
