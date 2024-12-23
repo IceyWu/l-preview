@@ -6,7 +6,7 @@ import "@/styles/components/image.css";
 import ImageMetaPanel from "./ImageMetaPanel.vue";
 import { isArray, isEmpty } from "@iceywu/utils";
 
-const { data, src,initialIndex=0 } = defineProps<ImageProps>();
+const { data, src, initialIndex = 0 } = defineProps<ImageProps>();
 const images = computed(() => {
   if (isEmpty(src)) {
     return isArray(data) ? data : [data];
@@ -19,7 +19,6 @@ const images = computed(() => {
   }
 });
 
-
 const isVisible = ref(false);
 const scale = ref(1);
 const rotation = ref(0);
@@ -30,9 +29,12 @@ const startPosition = ref({ x: 0, y: 0 });
 const imageRef = ref<HTMLImageElement | null>(null);
 const currentIndex = ref(initialIndex || 0);
 // 监听initialIndex
-watch(() => initialIndex, (val) => {
-  currentIndex.value = val;
-});
+watch(
+  () => initialIndex,
+  (val) => {
+    currentIndex.value = val;
+  }
+);
 
 // 图片缩放
 const zoom = (delta: number) => {
@@ -253,13 +255,13 @@ onUnmounted(() => {
 
       <!-- 图片元信息面板 -->
       <template v-if="isNeedMetaPanel && !isEmpty(images[currentIndex].exif)">
-        <slot name="meta" >
+        <slot name="meta">
           <ImageMetaPanel :data="images[currentIndex]">
             <template #location>
               <slot :data="images[currentIndex]" name="location"> </slot>
             </template>
             <template #more>
-              <slot :data="images[currentIndex]"  name="more"> </slot>
+              <slot :data="images[currentIndex]" name="more"> </slot>
             </template>
           </ImageMetaPanel>
         </slot>
@@ -267,8 +269,10 @@ onUnmounted(() => {
 
       <!-- 控制按钮 -->
       <div class="controls">
-        <button @click="prevImage" title="上一张">←</button>
-        <button @click="nextImage" title="下一张">→</button>
+        <template v-if="images?.length > 1">
+          <button @click="prevImage" title="上一张">←</button>
+          <button @click="nextImage" title="下一张">→</button>
+        </template>
         <button @click="zoom(0.1)" title="放大">+</button>
         <button @click="zoom(-0.1)" title="缩小">-</button>
         <button @click="rotate" title="旋转">↻</button>

@@ -107,7 +107,14 @@ export default defineComponent({
         decreaseBlurNumber();
       }, 10000);
     }
-
+    function getImgUrl(src: string) {
+      const fileSuffix = src.substring(src.lastIndexOf("."));
+      if (fileSuffix.toUpperCase() === ".HEIC") {
+        return `${src}?x-oss-process=image/format,jpg`;
+      } else {
+        return src;
+      }
+    }
     function initPreImg() {
       const imgPre = document.createElement("img");
       imgPre.addEventListener("load", () => {
@@ -139,7 +146,7 @@ export default defineComponent({
           blurhashSrc.value = "";
         }, props.delay);
       };
-      img.src = props.data?.file;
+      img.src = getImgUrl(props.data?.file);
 
       // 初始化loading模式
       if (props.mode === "blurhash" && !isEmpty(props.data?.blurhash)) {
@@ -185,6 +192,7 @@ export default defineComponent({
           props.position?.y || 0
         }px) scale(${props.scale || 1}) rotate(${props.rotation || 0}deg)`,
         cursor: props?.isDragging ? "grabbing" : "grab",
+        transition: "transform .3s cubic-bezier(.4, 0, .2, 1)",
       };
     });
 
@@ -193,7 +201,7 @@ export default defineComponent({
       await nextTick();
 
       const player = LivePhotosKit.Player(livePhotoRef.value);
-      player.photoSrc = props.data?.file;
+      player.photoSrc = getImgUrl(props.data?.file);
       player.videoSrc = props.data?.videoSrc;
     }
 
@@ -201,7 +209,7 @@ export default defineComponent({
       isShowOrigin.value ? (
         <img
           ref={livePhotoRef}
-          src={props.data?.file}
+          src={getImgUrl(props.data?.file)}
           style={baseStyle.value}
           {...attrs}
         />
