@@ -221,13 +221,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <LPImage
-    v-bind="$attrs"
-    :data="images[currentIndex]"
-    style="height: 100%; width: 100%"
-    isShowOrigin
-    @click="showPreview"
-  />
+  <div style="width: 100%; height: 100%" @click="showPreview">
+    <LPImage
+      v-bind="$attrs"
+      :data="images[currentIndex]"
+      style="height: 100%; width: 100%"
+      isShowOrigin
+    />
+  </div>
 
   <!-- 使用 Teleport 包装预览遮罩层 -->
   <Teleport to="body">
@@ -249,6 +250,7 @@ onUnmounted(() => {
           position: position,
           isDragging: isDragging,
         }"
+        style="width: 100%; height: 100%"
         @imageLoaded="handleImageLoad"
         @mousedown.prevent="handleDragStart"
       />

@@ -48,7 +48,7 @@ export default defineComponent({
     // 是否开启live模式
     isLive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     // position
     position: {
@@ -136,7 +136,7 @@ export default defineComponent({
             naturalWidth: img.naturalWidth,
             naturalHeight: img.naturalHeight,
           });
-          if (props.isLive) {
+          if (props.isLive && !isEmpty(props.data?.videoSrc)) {
             initLivePhoto();
           }
         }, props.delay);
