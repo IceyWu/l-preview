@@ -7,7 +7,7 @@ import {
   watch,
 } from "vue";
 import { isEmpty } from "@iceywu/utils";
-import * as LivePhotosKit from "livephotoskit";
+import { LivePhotoViewer } from "live-photo";
 
 declare global {
   namespace JSX {
@@ -163,8 +163,8 @@ export default defineComponent({
       () => {
         isLoaded.value = false; // 重置加载状态
         loadImage(); // 重新加载图片
-      },
-      { immediate: true }
+      }
+      // { immediate: true }
     );
 
     onMounted(() => {
@@ -200,25 +200,47 @@ export default defineComponent({
     async function initLivePhoto() {
       await nextTick();
 
-      const player = LivePhotosKit.Player(livePhotoRef.value);
-      player.photoSrc = getImgUrl(props.data?.file);
-      player.videoSrc = props.data?.videoSrc;
+      // 检查 livePhotoRef 是否为 null
+      if (livePhotoRef.value) {
+        new LivePhotoViewer({
+          photoSrc: getImgUrl(props.data?.file),
+          videoSrc: props.data?.videoSrc,
+          container: livePhotoRef.value,
+          width: "100%",
+          height: "100%",
+        });
+      } else {
+        console.error(
+          "livePhotoRef is null, cannot initialize LivePhotosKit.Player"
+        );
+      }
     }
 
-    return () =>
-      isShowOrigin.value ? (
+    const renderImgOrigin = () => {
+      return props.isLive && !isEmpty(props.data?.videoSrc) ? (
+        <div ref={livePhotoRef} style={baseStyle.value} {...attrs}></div>
+      ) : (
         <img
           ref={livePhotoRef}
           src={getImgUrl(props.data?.file)}
           style={baseStyle.value}
           {...attrs}
         />
-      ) : (
-        <img
-          src={loadingImgSrc.value}
-          style={placeholderStyle.value}
-          {...attrs}
-        />
       );
+    };
+
+    return () => (
+      <div style={baseStyle.value}>
+        {isShowOrigin.value ? (
+          renderImgOrigin()
+        ) : (
+          <img
+            src={loadingImgSrc.value}
+            style={placeholderStyle.value}
+            {...attrs}
+          />
+        )}
+      </div>
+    );
   },
 });
