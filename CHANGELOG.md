@@ -1,6 +1,38 @@
 # Changelog
 
 
+## v0.0.33
+
+[compare changes](https://github.com/IceyWu/l-preview/compare/v0.0.2...v0.0.33)
+
+### 🚀 Enhancements
+
+- 删除输入框组件，添加图像组件文档，更新 VitePress 配置 ([3efafc2](https://github.com/IceyWu/l-preview/commit/3efafc2))
+- 添加图像元信息面板组件，重构图像组件以支持元数据展示 ([e76a57e](https://github.com/IceyWu/l-preview/commit/e76a57e))
+- 更新图像组件，支持图片数组和循环切换功能 ([75df283](https://github.com/IceyWu/l-preview/commit/75df283))
+- Add slot data ([3016dcc](https://github.com/IceyWu/l-preview/commit/3016dcc))
+- 优化图像组件，添加HEIC格式支持并改进代码可读性 ([40970c0](https://github.com/IceyWu/l-preview/commit/40970c0))
+- 更新图像组件，替换livephotoskit为live-photo并改进初始化逻辑 ([83dc021](https://github.com/IceyWu/l-preview/commit/83dc021))
+
+### 🩹 Fixes
+
+- 优化传参 ([09feca8](https://github.com/IceyWu/l-preview/commit/09feca8))
+- Test ([0d87421](https://github.com/IceyWu/l-preview/commit/0d87421))
+
+### 📖 Documentation
+
+- 更新文档，添加图像组件使用示例 ([87b1e7f](https://github.com/IceyWu/l-preview/commit/87b1e7f))
+
+### 🏡 Chore
+
+- **release:** V0.0.2 ([653572e](https://github.com/IceyWu/l-preview/commit/653572e))
+- **release:** V0.0.3 ([669b23e](https://github.com/IceyWu/l-preview/commit/669b23e))
+- Update version ([4916652](https://github.com/IceyWu/l-preview/commit/4916652))
+
+### ❤️ Contributors
+
+- IceyWu ([@Life-Palette](http://github.com/Life-Palette))
+
 ## v0.0.3
 
 [compare changes](https://github.com/IceyWu/l-preview/compare/v0.0.2...v0.0.3)
