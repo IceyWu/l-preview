@@ -24,4 +24,5 @@ export interface ImageProps {
   data?: any[] | any;
   isNeedMetaPanel?: boolean;
   initialIndex?: number;
+  isNeedPreview?: boolean;
 }

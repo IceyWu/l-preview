@@ -6,7 +6,12 @@ import "@/styles/components/image.css";
 import ImageMetaPanel from "./ImageMetaPanel.vue";
 import { isArray, isEmpty } from "@iceywu/utils";
 
-const { data, src, initialIndex = 0 } = defineProps<ImageProps>();
+const {
+  data,
+  src,
+  initialIndex = 0,
+  isNeedPreview,
+} = defineProps<ImageProps>();
 const images = computed(() => {
   if (isEmpty(src)) {
     return isArray(data) ? data : [data];
@@ -82,6 +87,7 @@ const reset = () => {
 
 // 显示预览
 const showPreview = () => {
+  if (!isNeedPreview) return;
   isVisible.value = true;
   loading.value = true;
 };
