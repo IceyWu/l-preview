@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.0.34
+
+[compare changes](https://github.com/IceyWu/l-preview/compare/v0.0.33...v0.0.34)
+
+### 🩹 Fixes
+
+- Add isNeedPreview ([c48aa1a](https://github.com/IceyWu/l-preview/commit/c48aa1a))
+
+### 🏡 Chore
+
+- **release:** V0.0.33 ([ee85110](https://github.com/IceyWu/l-preview/commit/ee85110))
+
+### ❤️ Contributors
+
+- IceyWu ([@Life-Palette](http://github.com/Life-Palette))
+
 ## v0.0.33
 
 [compare changes](https://github.com/IceyWu/l-preview/compare/v0.0.2...v0.0.33)
