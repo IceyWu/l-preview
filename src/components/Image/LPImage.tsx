@@ -6,7 +6,7 @@ import {
   nextTick,
   watch,
 } from "vue";
-import { isEmpty } from "@iceywu/utils";
+import { getObjVal, isEmpty } from "@iceywu/utils";
 import { LivePhotoViewer } from "live-photo";
 
 declare global {
@@ -18,6 +18,7 @@ declare global {
 }
 import { decode } from "blurhash";
 import { getDataUrlFromArr } from "./blurhash";
+import { fileParse, type ParseOptions } from "@life-palette/utils";
 
 export default defineComponent({
   name: "LPImage",
@@ -72,18 +73,25 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    parseOptions: {
+      type: Object,
+    },
   },
   setup(props, { slots, attrs, emit }) {
+    const paeseOptions: ParseOptions = getObjVal(props, "parseOptions", {});
+
+    let file_handle = fileParse(props.data, paeseOptions);
+
     // 是否展示原图
     const isShowOrigin = computed(() => {
       return props.isShowOrigin && isLoaded.value;
     });
     // blurhashSrc
     const loadingImgSrc = computed(() => {
-      if (props.mode === "blurhash" && !isEmpty(props.data?.blurhash)) {
+      if (props.mode === "blurhash" && !isEmpty(file_handle?.blurhash)) {
         return blurhashSrc.value;
       } else if (props.mode === "normal") {
-        return props.data?.thumbnail;
+        return file_handle?.thumbnail;
       } else {
         return "";
       }
@@ -107,13 +115,9 @@ export default defineComponent({
         decreaseBlurNumber();
       }, 10000);
     }
-    function getImgUrl(src: string) {
-      const fileSuffix = src.substring(src.lastIndexOf("."));
-      if (fileSuffix.toUpperCase() === ".HEIC") {
-        return `${src}?x-oss-process=image/format,jpg`;
-      } else {
-        return src;
-      }
+    function getImgUrl(origin: boolean) {
+      const { thumbnailUrl, baseSrc } = file_handle;
+      return origin ? baseSrc : thumbnailUrl;
     }
     function initPreImg() {
       const imgPre = document.createElement("img");
@@ -121,7 +125,7 @@ export default defineComponent({
         startDecreaseBlurNumber();
       });
       imgPre.addEventListener("error", () => {});
-      imgPre.src = props.data?.thumbnail;
+      imgPre.src = file_handle?.thumbnail;
     }
 
     // 图片加载逻辑
@@ -136,7 +140,7 @@ export default defineComponent({
             naturalWidth: img.naturalWidth,
             naturalHeight: img.naturalHeight,
           });
-          if (props.isLive && !isEmpty(props.data?.videoSrc)) {
+          if (props.isLive && !isEmpty(file_handle?.videoSrc)) {
             initLivePhoto();
           }
         }, props.delay);
@@ -146,11 +150,11 @@ export default defineComponent({
           blurhashSrc.value = "";
         }, props.delay);
       };
-      img.src = getImgUrl(props.data?.file);
+      img.src = getImgUrl(false);
 
       // 初始化loading模式
-      if (props.mode === "blurhash" && !isEmpty(props.data?.blurhash)) {
-        const pixels = decode(props.data?.blurhash, 32, 32);
+      if (props.mode === "blurhash" && !isEmpty(file_handle?.blurhash)) {
+        const pixels = decode(file_handle?.blurhash, 32, 32);
         blurhashSrc.value = getDataUrlFromArr(pixels, 32, 32);
       } else if (props.mode === "normal") {
         initPreImg();
@@ -161,6 +165,7 @@ export default defineComponent({
     watch(
       () => props.data,
       () => {
+        file_handle = fileParse(props.data, paeseOptions);
         isLoaded.value = false; // 重置加载状态
         loadImage(); // 重新加载图片
       }
@@ -203,8 +208,8 @@ export default defineComponent({
       // 检查 livePhotoRef 是否为 null
       if (livePhotoRef.value) {
         new LivePhotoViewer({
-          photoSrc: getImgUrl(props.data?.file),
-          videoSrc: props.data?.videoSrc,
+          photoSrc: getImgUrl(false),
+          videoSrc: file_handle?.videoSrc,
           container: livePhotoRef.value,
           width: "100%",
           height: "100%",
@@ -217,12 +222,12 @@ export default defineComponent({
     }
 
     const renderImgOrigin = () => {
-      return props.isLive && !isEmpty(props.data?.videoSrc) ? (
+      return props.isLive && !isEmpty(file_handle?.videoSrc) ? (
         <div ref={livePhotoRef} style={baseStyle.value} {...attrs}></div>
       ) : (
         <img
           ref={livePhotoRef}
-          src={getImgUrl(props.data?.file)}
+          src={getImgUrl(true)}
           style={baseStyle.value}
           {...attrs}
         />

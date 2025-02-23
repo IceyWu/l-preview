@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.0.35
+
+[compare changes](https://github.com/IceyWu/l-preview/compare/v0.0.34...v0.0.35)
+
+### 🏡 Chore
+
+- **release:** V0.0.34 ([8f43228](https://github.com/IceyWu/l-preview/commit/8f43228))
+
+### ❤️ Contributors
+
+- IceyWu ([@Life-Palette](http://github.com/Life-Palette))
+
 ## v0.0.34
 
 [compare changes](https://github.com/IceyWu/l-preview/compare/v0.0.33...v0.0.34)
