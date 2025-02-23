@@ -1,7 +1,7 @@
 {
   "name": "l-preview",
   "private": false,
-  "version": "0.0.36",
+  "version": "0.0.37",
   "type": "module",
   "files": [
     "dist"
@@ -24,7 +24,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "release": "changelogen --release && npm publish --registry https://registry.npmjs.org"
+    "release": "changelogen  && npm publish --registry https://registry.npmjs.org"
   },
   "dependencies": {
     "@iceywu/utils": "^0.0.49",
