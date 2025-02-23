@@ -25,4 +25,6 @@ export interface ImageProps {
   isNeedMetaPanel?: boolean;
   initialIndex?: number;
   isNeedPreview?: boolean;
+  isNeedOrigin?: boolean;
+  isNeedPreviewOrigin?: boolean;
 }

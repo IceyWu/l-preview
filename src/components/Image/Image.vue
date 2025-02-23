@@ -11,6 +11,8 @@ const {
   src,
   initialIndex = 0,
   isNeedPreview,
+  isNeedOrigin = true,
+  isNeedPreviewOrigin = true,
 } = defineProps<ImageProps>();
 const images = computed(() => {
   if (isEmpty(src)) {
@@ -232,7 +234,7 @@ onUnmounted(() => {
       v-bind="$attrs"
       :data="images[currentIndex]"
       style="height: 100%; width: 100%"
-      isShowOrigin
+      :isShowOrigin="isNeedOrigin"
     />
   </div>
 
@@ -249,7 +251,7 @@ onUnmounted(() => {
         :data="images[currentIndex]"
         :alt="alt"
         class="preview-image"
-        isShowOrigin
+        :isShowOrigin="isNeedPreviewOrigin"
         v-bind="{
           scale: scale,
           rotation: rotation,

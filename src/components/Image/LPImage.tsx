@@ -81,11 +81,6 @@ export default defineComponent({
     const paeseOptions: ParseOptions = getObjVal(props, "parseOptions", {});
 
     let file_handle = fileParse(props.data, paeseOptions);
-
-    // 是否展示原图
-    const isShowOrigin = computed(() => {
-      return props.isShowOrigin && isLoaded.value;
-    });
     // blurhashSrc
     const loadingImgSrc = computed(() => {
       if (props.mode === "blurhash" && !isEmpty(file_handle?.blurhash)) {
@@ -115,9 +110,10 @@ export default defineComponent({
         decreaseBlurNumber();
       }, 10000);
     }
-    function getImgUrl(origin: boolean) {
+    function getImgUrl() {
       const { thumbnailUrl, baseSrc } = file_handle;
-      return origin ? baseSrc : thumbnailUrl;
+      const url = props.isShowOrigin ? baseSrc : thumbnailUrl;
+      return url;
     }
     function initPreImg() {
       const imgPre = document.createElement("img");
@@ -150,7 +146,7 @@ export default defineComponent({
           blurhashSrc.value = "";
         }, props.delay);
       };
-      img.src = getImgUrl(false);
+      img.src = getImgUrl();
 
       // 初始化loading模式
       if (props.mode === "blurhash" && !isEmpty(file_handle?.blurhash)) {
@@ -208,7 +204,7 @@ export default defineComponent({
       // 检查 livePhotoRef 是否为 null
       if (livePhotoRef.value) {
         new LivePhotoViewer({
-          photoSrc: getImgUrl(false),
+          photoSrc: getImgUrl(),
           videoSrc: file_handle?.videoSrc,
           container: livePhotoRef.value,
           width: "100%",
@@ -227,7 +223,7 @@ export default defineComponent({
       ) : (
         <img
           ref={livePhotoRef}
-          src={getImgUrl(true)}
+          src={getImgUrl()}
           style={baseStyle.value}
           {...attrs}
         />
@@ -236,7 +232,7 @@ export default defineComponent({
 
     return () => (
       <div style={baseStyle.value}>
-        {isShowOrigin.value ? (
+        {isLoaded.value ? (
           renderImgOrigin()
         ) : (
           <img
