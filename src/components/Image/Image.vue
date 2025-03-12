@@ -48,28 +48,28 @@ const zoom = (delta: number) => {
   const newScale = Math.max(0.1, Math.min(5, scale.value + delta));
 
   if (imageRef.value) {
-    // 获取预览区域的尺寸
-    const containerWidth = window.innerWidth * 0.9;
-    const containerHeight = window.innerHeight * 0.9;
+    // // 获取预览区域的尺寸
+    // const containerWidth = window.innerWidth * 0.9;
+    // const containerHeight = window.innerHeight * 0.9;
 
-    // 计算新的缩放尺寸
-    const scaledWidth = imageRef.value.naturalWidth * newScale;
-    const scaledHeight = imageRef.value.naturalHeight * newScale;
+    // // 计算新的缩放尺寸
+    // const scaledWidth = imageRef.value.naturalWidth * newScale;
+    // const scaledHeight = imageRef.value.naturalHeight * newScale;
 
-    // 计算新的最大移动范围
-    const maxX = Math.max(0, (scaledWidth - containerWidth) / 2);
-    const maxY = Math.max(0, (scaledHeight - containerHeight) / 2);
+    // // 计算新的最大移动范围
+    // const maxX = Math.max(0, (scaledWidth - containerWidth) / 2);
+    // const maxY = Math.max(0, (scaledHeight - containerHeight) / 2);
 
-    // 等比例调整当前位置
-    const scaleRatio = newScale / scale.value;
-    const newX = position.value.x * scaleRatio;
-    const newY = position.value.y * scaleRatio;
+    // // 等比例调整当前位置
+    // const scaleRatio = newScale / scale.value;
+    // const newX = position.value.x * scaleRatio;
+    // const newY = position.value.y * scaleRatio;
 
-    // 确保位置在新的范围内
-    position.value = {
-      x: Math.max(-maxX, Math.min(maxX, newX)),
-      y: Math.max(-maxY, Math.min(maxY, newY)),
-    };
+    // // 确保位置在新的范围内
+    // position.value = {
+    //   x: Math.max(-maxX, Math.min(maxX, newX)),
+    //   y: Math.max(-maxY, Math.min(maxY, newY)),
+    // };
   }
 
   scale.value = newScale;

@@ -170,7 +170,7 @@ const getMetaByKey = (key: string) => {
     </button>
     <div v-if="showMoreInfo" class="more-info-panel">
       <h4>更多信息</h4>
-      <p v-for="item in imgMetaData" :key="item.key">
+      <p v-for="item in imgMetaData" class="more-info-label" :key="item.key">
         {{ item?.label }}: {{ item?.value || "--" }}
       </p>
       <slot name="more" :data></slot>

@@ -193,7 +193,7 @@ export default defineComponent({
           props.position?.y || 0
         }px) scale(${props.scale || 1}) rotate(${props.rotation || 0}deg)`,
         cursor: props?.isDragging ? "grabbing" : "grab",
-        transition: "transform .3s cubic-bezier(.4, 0, .2, 1)",
+        // transition: "transform .3s cubic-bezier(.4, 0, .2, 1)",
       };
     });
 
